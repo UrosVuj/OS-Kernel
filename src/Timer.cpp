@@ -279,9 +279,3 @@ void tick_semaphores(){
 	}
 
 }
-
-
-
-
-
-
