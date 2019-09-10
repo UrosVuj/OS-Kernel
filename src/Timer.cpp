@@ -7,7 +7,6 @@
 
 
 
-
 PCB* Main_thread = new PCB();
 PCB* Idle_thread = new PCB(idle);
 
