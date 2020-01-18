@@ -20,10 +20,9 @@ unsigned oldTimerOFF, oldTimerSEG; // old interrupt routine
 extern void tick();
 
 
-volatile int global_timer=5;       	//Global timer which ticks how much time is left for the current thread
+volatile int global_timer = 5;       	//Global timer which ticks how much time is left for the current thread
 
-volatile int context_change = 0;    //flag that determines if there will or won't
-									//be a change of context
+volatile int context_change = 0;    
 
 volatile unsigned lockFlag=1;
 
@@ -60,8 +59,8 @@ PCB* get_thread(){
 void interrupt timer(){
 
 	int pom;
-	if(context_change==0)pom=1;
-	else pom=0;
+	if(context_change==0) pom = 1;
+	else pom = 0;
 
 	if(pom) {
 	tick_semaphores();
@@ -104,14 +103,14 @@ void interrupt timer(){
 		tbp = PCB::running->bp;
 
 		global_timer = PCB::running->time;
-		if(PCB::running->time==0)global_timer--;
+		if(PCB::running->time == 0) global_timer--;
 		asm {
 			mov sp, tsp   // restores the above mentioned pointers
 			mov ss, tss
 			mov bp, tbp
 		}
 	}
-		else context_change=1;
+		else context_change = 1;
 
 	}
 
@@ -152,6 +151,7 @@ void inic(){
 
 
 void real_dispatch(){
+	
 	asm cli
 	
 	context_change = 1;
@@ -209,47 +209,45 @@ void tick_semaphores(){
 
 		PCB* temp_first=(PCB*)temp_sem->first_blocked;
 
-		if(temp_first)
-		
-		{
+		if(temp_first){
 
-		PCB* temp1=(PCB*)temp_first->next_sem_blocked;
-		PCB* temp2=temp_first;
-		PCB* temp_del;
+			PCB* temp1=(PCB*)temp_first->next_sem_blocked;
+			PCB* temp2=temp_first;
+			PCB* temp_del;
 
-		while(temp1){
+			while(temp1){
 
-			temp1->timeleft_semblock--;
-			if(temp1->timeleft_semblock==0 && temp1->is_wait_0==0){
+				temp1->timeleft_semblock--;
+				if(temp1->timeleft_semblock == 0 && temp1->is_wait_0 == 0){
 
-				temp_del=temp1;
-				temp1->state_thread=READY;
-				temp1->signaled=0;
-				put_thread((PCB*)temp1);
-				temp2->next_sem_blocked=temp1->next_sem_blocked;
-				temp1=(PCB*)temp1->next_sem_blocked;
-				temp_del->next_sem_blocked=0;
+					temp_del = temp1;
+					temp1->state_thread = READY;
+					temp1->signaled = 0;
+					put_thread((PCB*)temp1);
+					temp2->next_sem_blocked=temp1->next_sem_blocked;
+					temp1=(PCB*)temp1->next_sem_blocked;
+					temp_del->next_sem_blocked = 0;
 
-			}
-			else{
-				temp1=(PCB*)temp1->next_sem_blocked;
-				temp2=(PCB*)temp2->next_sem_blocked;
 				}
-
+				else{
+					temp1=(PCB*)temp1->next_sem_blocked;
+					temp2=(PCB*)temp2->next_sem_blocked;
 					}
+		}
+
 		temp_first->timeleft_semblock--;
-		if(temp_first->timeleft_semblock==0 && temp_first->is_wait_0==0){
+		if(temp_first->timeleft_semblock == 0 && temp_first->is_wait_0 == 0){
 
 			temp_first->state_thread=READY;
 			put_thread((PCB*)temp_first);
-			temp_first->signaled=0;
+			temp_first->signaled = 0;
 
 			temp_sem->first_blocked=temp_first->next_sem_blocked;
-			temp_first->next_sem_blocked=0;
+			temp_first->next_sem_blocked = 0;
 			}
 
 		}
 
-		temp_sem=(KernelSem*)temp_sem->sem_next;
+		temp_sem = (KernelSem*)temp_sem->sem_next;
 	}
 }
