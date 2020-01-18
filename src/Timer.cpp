@@ -10,9 +10,6 @@
 PCB* Main_thread = new PCB();
 PCB* Idle_thread = new PCB(idle);
 
-
-
-
 // helper variables for context change in timer();
 volatile unsigned tsp;
 volatile unsigned tbp;
@@ -23,11 +20,10 @@ unsigned oldTimerOFF, oldTimerSEG; // old interrupt routine
 extern void tick();
 
 
+volatile int global_timer=5;       	//Global timer which ticks how much time is left for the current thread
 
-volatile int global_timer=5;       			  //Global timer which ticks how much time is left for the current thread
-
-volatile int context_change = 0;              //flag that determines if there will or won't
-											  // be a change of context
+volatile int context_change = 0;    //flag that determines if there will or won't
+									//be a change of context
 
 volatile unsigned lockFlag=1;
 
@@ -40,13 +36,7 @@ void put_thread(PCB* pcb){
 }
 
 
-
-
-
-PCB* get_thread(){              //function that can return a thread even if
-								// there is no threads in the scheduler.
-								// ** returns the main thread or the idle thread
-								// in that case
+PCB* get_thread(){              
 
 	asm pushf
 	asm cli
@@ -67,19 +57,7 @@ PCB* get_thread(){              //function that can return a thread even if
 }
 
 
-
-
-
-
-
-
-
-
-
 void interrupt timer(){
-
-
-
 
 	int pom;
 	if(context_change==0)pom=1;
@@ -110,7 +88,12 @@ void interrupt timer(){
 		PCB::running->ss = tss;
 
 
-		if(PCB::running && PCB::running->ended==0 && PCB::running->state_thread!=BLOCKED  && PCB::running->state_thread!=IDLE && PCB::running->state_thread!=MAIN){
+		if(PCB::running
+			&& PCB::running->ended==0
+			&& PCB::running->state_thread!=BLOCKED
+			&& PCB::running->state_thread!=IDLE
+			&& PCB::running->state_thread!=MAIN)
+		{
 			put_thread((PCB*)PCB::running);
 		}
 
@@ -132,9 +115,6 @@ void interrupt timer(){
 
 	}
 
-
-
-
 }
 
 
@@ -148,19 +128,19 @@ void inic(){
 		push es
 		push ax
 
-		mov ax,0   // initialises the timer routine
+		mov ax,0   //initialises the timer routine
 		mov es,ax
 
-		mov ax, word ptr es:0022h // remembers the old routine
+		mov ax, word ptr es:0022h //remembers the old routine
 		mov word ptr oldTimerSEG, ax
 		mov ax, word ptr es:0020h
 		mov word ptr oldTimerOFF, ax
 
-		mov word ptr es:0022h, seg timer //  sets the new routine
+		mov word ptr es:0022h, seg timer //sets the new routine
 		mov word ptr es:0020h, offset timer 
 
-		mov ax, oldTimerSEG		  //	places the old routine at
-		mov word ptr es:0182h, ax //    the 60h memory location
+		mov ax, oldTimerSEG		  //places the old routine at
+		mov word ptr es:0182h, ax //the 60h memory location
 		mov ax, oldTimerOFF
 		mov word ptr es:0180h, ax
 
@@ -173,7 +153,9 @@ void inic(){
 
 void real_dispatch(){
 	asm cli
-		context_change = 1;
+	
+	context_change = 1;
+
 	asm int 8h
 	asm sti
 }
@@ -181,8 +163,7 @@ void real_dispatch(){
 
 void restore(){
 
-	// returns the old interrupt routine in its initial memory location
-
+	//returns the old interrupt routine in its initial memory location
 	asm {
 		cli
 		push es
@@ -227,10 +208,10 @@ void tick_semaphores(){
 	while(temp_sem){
 
 		PCB* temp_first=(PCB*)temp_sem->first_blocked;
-		if(temp_first){
 
-
-
+		if(temp_first)
+		
+		{
 
 		PCB* temp1=(PCB*)temp_first->next_sem_blocked;
 		PCB* temp2=temp_first;
@@ -253,12 +234,11 @@ void tick_semaphores(){
 			else{
 				temp1=(PCB*)temp1->next_sem_blocked;
 				temp2=(PCB*)temp2->next_sem_blocked;
-			}
+				}
 
-			}
+					}
 		temp_first->timeleft_semblock--;
 		if(temp_first->timeleft_semblock==0 && temp_first->is_wait_0==0){
-
 
 			temp_first->state_thread=READY;
 			put_thread((PCB*)temp_first);
@@ -266,15 +246,10 @@ void tick_semaphores(){
 
 			temp_sem->first_blocked=temp_first->next_sem_blocked;
 			temp_first->next_sem_blocked=0;
-		}
-
-
+			}
 
 		}
 
 		temp_sem=(KernelSem*)temp_sem->sem_next;
-
-
 	}
-
 }
