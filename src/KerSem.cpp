@@ -105,50 +105,50 @@ int KernelSem::signal(int number){
 
 void KernelSem::add_to_list(){
 
-	KernelSem* temp = (KernelSem*)All_sem_first;
-	if(!temp)All_sem_first = this;
-	else {
-		while(temp->sem_next)temp = (KernelSem*)temp->sem_next;
-		temp->sem_next = this;
-	}
+	 KernelSem* temp = (KernelSem*)All_sem_first;
+	 if(!temp)All_sem_first = this;
+	 else {
+		 while(temp->sem_next)temp = (KernelSem*)temp->sem_next;
+		 temp->sem_next = this;
+	 }
 
 }
 
 void KernelSem::add_to_blocked_list(){
 
-	PCB* temp = (PCB*)first_blocked;
-			if(!temp)first_blocked = PCB::running;
-			else {
-				while(temp->next_sem_blocked)
-					temp = (PCB*)temp->next_sem_blocked;
-				temp->next_sem_blocked = PCB::running;
-			}
+	 PCB* temp = (PCB*)first_blocked;
+	 if(!temp)first_blocked = PCB::running;
+	 else {
+		 while(temp->next_sem_blocked)
+			 temp = (PCB*)temp->next_sem_blocked;
+		 temp->next_sem_blocked = PCB::running;
+	 }
 }
 
 void KernelSem::remove_from_list(){
 
-	KernelSem* temp_sem=((KernelSem*)All_sem_first);
-			KernelSem* temp2_sem;
-			if(!temp_sem) return;
-			if(this->id == All_sem_first->id){
+	 KernelSem* temp_sem = ((KernelSem*)All_sem_first);
+	 KernelSem* temp2_sem;
+	 if(!temp_sem) return;
+	 if(this->id == All_sem_first->id){
 
-				if(temp_sem->sem_next){
-					temp2_sem = (KernelSem*)temp_sem->sem_next;
-					All_sem_first = temp2_sem;
-					return;
-				}
-				else {
-					All_sem_first = 0;
-					return;
-				}
+	 	 if(temp_sem->sem_next){
+			 temp2_sem = (KernelSem*)temp_sem->sem_next;
+			 All_sem_first = temp2_sem;
+			 return;
+		 }
+		 else {
+			 All_sem_first = 0;
+			 return;
+		 }
+	 }
+	 while(temp_sem && temp_sem->id != id)   {
+		 temp2_sem = temp_sem;
+		 temp_sem = (KernelSem*)temp_sem->sem_next; 
+	 }
 
-			}
-			while(temp_sem && temp_sem->id != id)   {
-				temp2_sem = temp_sem;
-				temp_sem = (KernelSem*)temp_sem->sem_next; 
-			}
-			temp2_sem->sem_next = temp_sem->sem_next;
-			return;
+	 temp2_sem->sem_next = temp_sem->sem_next;
+	 return;
 }
 
 int KernelSem::value(){
