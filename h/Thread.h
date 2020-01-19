@@ -13,22 +13,27 @@ class Thread {
 
 public:
 
-  void start();
-  void waitToComplete();
-  virtual ~Thread();
+	void start();
+	void waitToComplete();
+	virtual ~Thread();
 
-  ID getId();
-  static ID getRunningId();
-  static Thread * getThreadById(ID id);
+	ID getId();
+	static ID getRunningId();
+	static Thread * getThreadById(ID id);
 
-protected:
-  friend class PCB;
-  Thread (StackSize stackSize = defaultStackSize, Time timeSlice = defaultTimeSlice);
-  virtual void run() =0;
+ protected:
+  
+	friend class PCB;
+	Thread (StackSize stackSize = defaultStackSize, Time timeSlice = defaultTimeSlice);
+	virtual void run() = 0;
 
-private:   PCB* myPCB;
-}
-;
+ private:  
+	
+	PCB* myPCB;
+
+};
+
+
 void dispatch ();
 
 #endif

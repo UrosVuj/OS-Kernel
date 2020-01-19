@@ -3,8 +3,6 @@
 
 #include "Pcb.h"
 
-
-
 void put_thread(PCB* pcb);
 PCB* get_thread();
 
