@@ -95,9 +95,7 @@ extern int context_change;
 
 		asm popf
 
-
 	}
-
 
 
 	void PCB::fill(void (*body)(), StackSize size  ){
@@ -115,7 +113,6 @@ extern int context_change;
 		#endif
 
 	}
-
 
 
 	ID PCB::getId(){
@@ -202,7 +199,6 @@ extern int context_change;
 	}
 
 
-
 	void PCB::block_add(){
 
 		/*
@@ -220,7 +216,6 @@ extern int context_change;
 			Blocked_last=Blocked_last->next_blocked;
 		}
 	}
-
 
 	
 	void PCB::waitToComplete(){
@@ -241,7 +236,6 @@ extern int context_change;
 		}
 		asm popf
 	}
-
 
 	
 	void PCB::remove_from_list(){
@@ -272,14 +266,9 @@ extern int context_change;
 		temp2_thread->next = temp_thread->next;
 		return;
 
-
-
 	}
 
 
-
-
-	
 	void PCB:: deblock_threads(){
 
 		/* 
@@ -303,9 +292,6 @@ extern int context_change;
 		Blocked_first=0;
 		Blocked_last=0;
 
-
-
-
 	}
 
 
@@ -327,4 +313,3 @@ extern int context_change;
 	 volatile PCB* PCB::running;
 	 volatile int PCB::numberofthreads = 0;
 	 PCB* PCB::All_threads_first = 0;
-
