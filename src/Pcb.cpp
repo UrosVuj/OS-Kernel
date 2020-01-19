@@ -78,7 +78,7 @@ extern int context_change;
 		asm pushf
 		asm cli
 
-		ended=0;
+		ended = 0;
 
 		time=1;
 		state_thread = IDLE;
@@ -105,7 +105,7 @@ extern int context_change;
 		//Initialises the stack of a thread
 
 		stack = new unsigned[size/sizeof(unsigned int)];
-		stack[size-1]=0x200
+		stack[size-1] = 0x200
 		#ifndef BCC_BLOCK_IGNORE
 		stack[size - 2] = FP_SEG(body);
 		stack[size - 3] = FP_OFF(body);
