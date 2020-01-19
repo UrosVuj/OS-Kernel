@@ -18,9 +18,8 @@ int main(int argc, char* argv[]){
 
 
 	PCB::running=Main_thread;
-	cout << "Operating Systems Project " << endl <<"Student: Uros Vujosevic"<< endl <<"Student ID: 0209/2017"<< endl;
-
-
+	cout << "Kernel Demonstration!" << endl <<"The demonstration consists of displaying the famous Producers/Consumers concurrency problem"<< endl
+		<<"The user can modify the number of threads which work as producers or consumers and the size of the buffer in which the produce is put"<< endl<<endl<<endl;
 
 	inic();
 
