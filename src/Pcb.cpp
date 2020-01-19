@@ -134,7 +134,6 @@ extern int context_change;
 	}
 
 	ID PCB::getRunningId(){
-
 		return ((PCB*)PCB::running)->personal_id;
 	}
 
@@ -213,24 +212,22 @@ extern int context_change;
 		}
 		else{
 			Blocked_last->next_blocked = (PCB*)PCB::running;
-			Blocked_last=Blocked_last->next_blocked;
+			Blocked_last = Blocked_last->next_blocked;
 		}
 	}
 
 	
 	void PCB::waitToComplete(){
-
 		/*
 		if the thread on which waitToComplete()
 		is called on isn't done, blocks the thread
 		otherwise it just passes through. 
 		*/
-
 		asm pushf
 		asm cli
 
-		if(this->ended==0){
-			running->state_thread=BLOCKED;
+		if(this->ended == 0){
+			running->state_thread = BLOCKED;
 			block_add();
 			dispatch();
 		}
@@ -283,14 +280,14 @@ extern int context_change;
 		volatile PCB* temp2;
 		if(!temp)return;
 		while(temp){
-			temp->state_thread=READY;
-			temp2=temp;
+			temp->state_thread = READY;
+			temp2 = temp;
 			put_thread((PCB*)temp);
-			temp=temp->next_blocked;
-			temp2->next_blocked=0;
+			temp = temp->next_blocked;
+			temp2->next_blocked = 0;
 		}
-		Blocked_first=0;
-		Blocked_last=0;
+		Blocked_first = 0;
+		Blocked_last = 0;
 
 	}
 
