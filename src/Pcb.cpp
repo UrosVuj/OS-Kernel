@@ -15,29 +15,29 @@ extern int context_change;
 		asm cli
 
 		personal_id=_id++;
-		next_sem_blocked=0;
-		signaled=0;
+		next_sem_blocked = 0;
+		signaled = 0;
 
-		state_thread=NEW;
+		state_thread = NEW;
 
-		Blocked_first=0;
-		Blocked_last=0;
-		next_blocked=0;
+		Blocked_first = 0;
+		Blocked_last = 0;
+		next_blocked = 0;
 
 		if(!All_threads_first){
-			All_threads_first=this;
+			All_threads_first = this;
 		}
 		else {
 			PCB* temp_;
-			temp_=All_threads_first;
-			while(temp_->next)temp_=temp_->next;
-			temp_->next=this;
+			temp_ = All_threads_first;
+			while(temp_->next)temp_ = temp_->next;
+			temp_->next = this;
 		}
 
-		next=0;
-		ended=0;
-		time=timeSlice;
-		myThread=thread;
+		next = 0;
+		ended = 0;
+		time = timeSlice;
+		myThread = thread;
 
 		fill(PCB::wrapper,_stackSize);
 
@@ -80,17 +80,16 @@ extern int context_change;
 
 		ended=0;
 
-
 		time=1;
-		state_thread=IDLE;
-		personal_id=0;
-		myThread=0;
-		Blocked_first=0;
-		Blocked_last=0;
-		next=0;
-		next_blocked=0;
-		next_sem_blocked=0;
-		signaled=0;
+		state_thread = IDLE;
+		personal_id = 0;
+		myThread = 0;
+		Blocked_first = 0;
+		Blocked_last = 0;
+		next = 0;
+		next_blocked = 0;
+		next_sem_blocked = 0;
+		signaled = 0;
 
 		fill(body, defaultStackSize);
 
@@ -133,7 +132,6 @@ extern int context_change;
 		if(temp) return temp->myThread;
 		else return 0;
 
-
 		asm popf
 
 	}
@@ -160,7 +158,7 @@ extern int context_change;
 		asm pushf
 		asm cli
 
-		if(this->state_thread==NEW)this->state_thread=READY;
+		if(this->state_thread == NEW)this->state_thread = READY;
 		numberofthreads++;
 		put_thread(this);
 		context_change=1;
@@ -169,9 +167,6 @@ extern int context_change;
 
 
 	}
-
-
-
 
 
 	void PCB::exitThread(){
@@ -208,7 +203,6 @@ extern int context_change;
 
 
 
-
 	void PCB::block_add(){
 
 		/*
@@ -217,17 +211,15 @@ extern int context_change;
 		of the callee thread
 		*/
 
-		if(Blocked_first==0){
-			Blocked_last=(PCB*)PCB::running;
-			Blocked_first=Blocked_last;
+		if(Blocked_first == 0){
+			Blocked_last = (PCB*)PCB::running;
+			Blocked_first = Blocked_last;
 		}
 		else{
-			Blocked_last->next_blocked=(PCB*)PCB::running;
+			Blocked_last->next_blocked = (PCB*)PCB::running;
 			Blocked_last=Blocked_last->next_blocked;
 		}
 	}
-
-
 
 
 	
@@ -256,31 +248,29 @@ extern int context_change;
 
 		// removes the thread from the list of "living" threads. 
 
-		PCB* temp_thread=All_threads_first;
+		PCB* temp_thread = All_threads_first;
 		PCB* temp2_thread;
 		if(!temp_thread) return;
-		if(PCB::running->personal_id==All_threads_first->personal_id){
+		if(PCB::running->personal_id == All_threads_first->personal_id){
 
 			if(temp_thread->next){
-			temp2_thread= temp_thread->next;
-			All_threads_first=temp2_thread;
+			temp2_thread = temp_thread->next;
+			All_threads_first = temp2_thread;
 			return;
 			}
 
 			else {
-			All_threads_first=0;
+			All_threads_first = 0;
 			return;
 			}
 
 		}
-		while(temp_thread && temp_thread->personal_id!=personal_id)   {
-			temp2_thread=temp_thread;
-			temp_thread=temp_thread->next;
+		while(temp_thread && temp_thread->personal_id != personal_id)   {
+			temp2_thread = temp_thread;
+			temp_thread = temp_thread->next;
 		}
-		temp2_thread->next=temp_thread->next;
+		temp2_thread->next = temp_thread->next;
 		return;
-
-
 
 
 
@@ -333,8 +323,8 @@ extern int context_change;
 				dispatch();
 		}
 	}
-	 volatile ID PCB::_id=1;
+	 volatile ID PCB::_id = 1;
 	 volatile PCB* PCB::running;
-	 volatile int PCB::numberofthreads=0;
-	 PCB* PCB::All_threads_first=0;
+	 volatile int PCB::numberofthreads = 0;
+	 PCB* PCB::All_threads_first = 0;
 
