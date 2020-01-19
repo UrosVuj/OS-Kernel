@@ -57,4 +57,5 @@ void dispatch(){
 Thread::Thread (StackSize stackSize, Time timeSlice){
 
 	myPCB = new PCB(this,stackSize,timeSlice);
+
 }
