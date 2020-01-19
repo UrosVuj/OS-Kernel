@@ -9,10 +9,8 @@ class KernelSem{
 
 public:
 
-
 	KernelSem(int init);
 	~KernelSem();
-
 
 	volatile int int_value;
 
@@ -25,19 +23,12 @@ public:
 	int id;
 
 
-
 	int wait(Time t);
-
 	int signal(int number);
 
-
 	void add_to_list();
-
 	void add_to_blocked_list();
-
-
 	void remove_from_list();
-
 	int value();
 
 };
