@@ -20,5 +20,3 @@ int Semaphore::signal(int n){
 	return myImpl->signal(n);
 }
 
-//katic
-
