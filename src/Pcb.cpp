@@ -192,9 +192,10 @@ extern int context_change;
 	PCB::~PCB(){
 		asm pushf
 		asm cli
-		delete[] stack;
-		asm popf
 
+		delete[] stack;
+		
+		asm popf
 	}
 
 
