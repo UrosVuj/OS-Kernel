@@ -34,7 +34,7 @@ int KernelSem::wait(Time t){
 	asm pushf
 	asm cli
 
-	if(t==0)PCB::running->is_wait_0 = 1;
+	if(t == 0)PCB::running->is_wait_0 = 1;
 	else PCB::running->is_wait_0 = 0;
 
 	if(--int_value < 0){
